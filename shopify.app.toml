@@ -2,7 +2,7 @@
 
 client_id = "5074dfa7e5c453d5e39def9332898b8b"
 name = "invoice-mauro-mario"
-application_url = "https://example.com"
+application_url = "https://invoice-three-mauve.vercel.app"
 embedded = true
 
 [build]
@@ -30,4 +30,4 @@ api_version = "2026-01"
 scopes = "read_customers,write_customers,write_products,read_orders,write_orders"
 
 [auth]
-redirect_urls = [ "https://example.com/api/auth" ]
+redirect_urls = [ "https://invoice-three-mauve.vercel.app/api/auth" ]
