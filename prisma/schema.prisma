@@ -15,7 +15,7 @@ generator client {
 //}
 
 datasource db {
-  provider = "postgreslq"
+  provider = "postgresql"
   url      = "env("DATABASE_URL")"
 }
 
