@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fattura Proforma - {{ order.order_name }}</title>
+  <style>
+    /* ========================================
+       DESIGN SYSTEM - Fattura Proforma Italiana
+       ======================================== */
+
+    /* --- COLOR PALETTE --- */
+    :root {
+      --color-primary: #1a3a52;        /* Blu scuro elegante (identità) */
+      --color-secondary: #2c5f7f;      /* Blu medio (accenti) */
+      --color-accent: #d4af37;         /* Oro tenue (eleganza italiana) */
+      --color-text-primary: #1a1a1a;   /* Quasi nero */
+      --color-text-secondary: #5a5a5a; /* Grigio medio */
+      --color-text-muted: #8c8c8c;     /* Grigio chiaro */
+      --color-border-primary: #1a3a52;
+      --color-border-secondary: #d0d5dd;
+      --color-bg-light: #f8f9fb;       /* Grigio tenue freddo */
+      --color-success: #0f7b3f;        /* Verde professionale */
+      --color-warning: #c77700;        /* Arancio tenue */
+      --color-error: #b91c1c;          /* Rosso professionale */
+
+      /* Spacing scale (8px base unit) */
+      --space-xs: 8px;
+      --space-sm: 16px;
+      --space-md: 24px;
+      --space-lg: 32px;
+      --space-xl: 40px;
+      --space-xxl: 48px;
+    }
+
+    /* --- BASE STYLES --- */
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
+      color: var(--color-text-primary);
+      margin: 0;
+      padding: var(--space-md);
+      background: #ffffff;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* --- HEADER --- */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-md);
+      border-bottom: 3px solid var(--color-primary);
+    }
+
+    .header-left {
+      flex: 1;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .document-title {
+      font-size: 26pt;
+      font-weight: 700;
+      margin: 0 0 var(--space-xs) 0;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      letter-spacing: 0.5px;
+    }
+
+    .document-subtitle {
+      font-size: 10pt;
+      color: var(--color-text-secondary);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    /* --- UNIFIED BOX STYLE (company-info, info-box, notes, warning-box) --- */
+    .company-info,
+    .info-box,
+    .notes,
+    .warning-box {
+      padding: var(--space-sm);
+      background: var(--color-bg-light);
+      border-left: 3px solid var(--color-primary);
+      border-top: 1px solid var(--color-border-secondary);
+      border-right: 1px solid var(--color-border-secondary);
+      border-bottom: 1px solid var(--color-border-secondary);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Varianti semantiche del box (solo colore bordo sinistro cambia) */
+    .company-info {
+      border-left-color: var(--color-primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .info-box {
+      border-left-color: var(--color-secondary);
+    }
+
+    .notes {
+      border-left-color: var(--color-accent);
+      margin-top: var(--space-lg);
+    }
+
+    .notes.payment-info {
+      border-left-color: var(--color-secondary);
+    }
+
+    .warning-box {
+      border-left-color: var(--color-error);
+      background: #fef2f2; /* Solo warning ha background più evidente */
+      margin-top: var(--space-lg);
+    }
+
+    /* --- COMPANY INFO --- */
+    .company-info h2,
+    .info-box h3,
+    .notes h3 {
+      font-size: 11pt;
+      font-weight: 700;
+      margin: 0 0 var(--space-sm) 0;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      letter-spacing: 0.3px;
+    }
+
+    .company-name {
+      font-size: 14pt;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .company-address {
+      padding: var(--space-sm) 0;
+      margin: var(--space-sm) 0;
+      border-top: 1px solid var(--color-border-secondary);
+      border-bottom: 1px solid var(--color-border-secondary);
+      font-size: 10pt;
+      line-height: 1.6;
+      color: var(--color-text-primary);
+    }
+
+    .company-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-xs) var(--space-lg);
+      margin-top: var(--space-sm);
+    }
+
+    .company-detail-item {
+      display: flex;
+      align-items: baseline;
+      font-size: 10pt;
+    }
+
+    .company-detail-label {
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      min-width: 110px;
+      margin-right: var(--space-xs);
+    }
+
+    .company-detail-value {
+      color: var(--color-text-primary);
+      font-weight: 400;
+    }
+
+    /* --- INFO BOXES GRID --- */
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .info-box {
+      flex: 1;
+    }
+
+    .info-box p {
+      margin: 6px 0;
+      font-size: 10pt;
+      color: var(--color-text-primary);
+    }
+
+    .info-label {
+      font-weight: 600;
+      display: inline-block;
+      min-width: 120px;
+      color: var(--color-text-secondary);
+    }
+
+    /* --- TABLE STYLES --- */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: var(--space-md) 0;
+      border: 1px solid var(--color-border-secondary);
+    }
+
+    table thead {
+      background: var(--color-primary);
+      color: #ffffff;
+    }
+
+    table th {
+      padding: 12px var(--space-sm);
+      text-align: left;
+      font-weight: 700;
+      font-size: 10pt;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    table th.text-right,
+    table td.text-right {
+      text-align: right;
+    }
+
+    table th.text-center,
+    table td.text-center {
+      text-align: center;
+    }
+
+    table tbody tr {
+      border-bottom: 1px solid var(--color-border-secondary);
+    }
+
+    table tbody tr:nth-child(even) {
+      background: var(--color-bg-light);
+    }
+
+    table tbody tr:hover {
+      background: #f0f3f7;
+    }
+
+    table td {
+      padding: 10px var(--space-sm);
+      font-size: 10pt;
+      color: var(--color-text-primary);
+    }
+
+    .item-description {
+      font-size: 9pt;
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .discount-info {
+      font-size: 9pt;
+      color: var(--color-error);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* --- TOTALS TABLE --- */
+    .totals-table {
+      margin-left: auto;
+      width: 350px;
+      margin-top: var(--space-md);
+      border: none;
+    }
+
+    .totals-table td {
+      padding: 6px var(--space-sm);
+      border: none;
+      font-size: 11pt;
+    }
+
+    .totals-table tr.subtotal td {
+      font-weight: 500;
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--color-border-secondary);
+    }
+
+    .totals-table tr.total td {
+      font-weight: 700;
+      font-size: 12pt;
+      padding-top: var(--space-sm);
+      border-top: 2px solid var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    /* --- SECTION TITLES --- */
+    h2 {
+      margin-top: var(--space-lg);
+      margin-bottom: var(--space-sm);
+      font-size: 12pt;
+      font-weight: 700;
+      color: var(--color-primary);
+      border-bottom: 2px solid var(--color-accent);
+      padding-bottom: var(--space-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    /* --- WARNING BOX --- */
+    .warning-box p {
+      margin: 6px 0;
+      font-size: 10pt;
+      color: var(--color-error);
+      line-height: 1.6;
+    }
+
+    .warning-box strong {
+      font-weight: 700;
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+      margin-top: var(--space-xxl);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--color-border-secondary);
+      font-size: 9pt;
+      color: var(--color-text-muted);
+      text-align: center;
+    }
+
+    .footer p {
+      margin: 6px 0;
+    }
+
+    /* --- UTILITY CLASSES --- */
+    strong {
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
+
+    em {
+      font-style: italic;
+      color: var(--color-text-muted);
+    }
+
+    s {
+      color: var(--color-text-muted);
+    }
+
+    /* Semantic color utilities (quando usati inline nell'HTML) */
+    [style*="color: #28a745"],
+    [style*="color:#28a745"] {
+      color: var(--color-success) !important;
+    }
+
+    [style*="color: #d9534f"],
+    [style*="color:#d9534f"] {
+      color: var(--color-error) !important;
+    }
+
+    [style*="color: #0066cc"],
+    [style*="color:#0066cc"] {
+      color: var(--color-secondary) !important;
+    }
+
+    /* --- PRINT OPTIMIZATION --- */
+    @media print {
+      body {
+        padding: 0;
+        background: #ffffff;
+      }
+
+      .container {
+        max-width: 100%;
+      }
+
+      /* Assicura che i colori siano stampabili */
+      table thead {
+        background: var(--color-primary) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .company-info,
+      .info-box,
+      .notes,
+      .warning-box {
+        background: var(--color-bg-light) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .warning-box {
+        background: #fef2f2 !important;
+      }
+
+      /* Evita interruzioni di pagina all'interno di box critici */
+      .company-info,
+      .info-box,
+      .warning-box,
+      table {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <h1 class="document-title">Fattura Proforma</h1>
+        <p class="document-subtitle">Documento non valido ai fini fiscali</p>
+      </div>
+      <div class="header-right">
+        <p style="margin: 0; font-size: 10pt;">
+          <strong>N. Documento:</strong> {{ order.order_name }}<br/>
+          <strong>Data:</strong> {{ order.created_at | date: "%d/%m/%Y" }}<br/>
+          {% if order.po_number %}
+          <strong>Rif. Cliente:</strong> {{ order.po_number }}<br/>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- DATI CEDENTE/PRESTATORE -->
+    <div class="company-info">
+      <h2>Cedente / Prestatore</h2>
+
+      <div class="company-name">{{ shop.name }}</div>
+
+      <div class="company-address">
+        {{ shop.address | format_address }}
+      </div>
+
+      {% assign partita_iva_shop = shop.metafields.company.partita_iva %}
+      {% assign codice_fiscale_shop = shop.metafields.company.codice_fiscale %}
+      {% assign rea_shop = shop.metafields.company.rea %}
+      {% assign capitale_sociale = shop.metafields.company.capitale_sociale %}
+      {% assign pec_shop = shop.metafields.company.pec %}
+      {% assign sdi_shop = shop.metafields.company.codice_sdi %}
+
+      <div class="company-details">
+        {% if partita_iva_shop %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Partita IVA:</span>
+          <span class="company-detail-value">{{ partita_iva_shop }}</span>
+        </div>
+        {% endif %}
+
+        {% if codice_fiscale_shop %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Codice Fiscale:</span>
+          <span class="company-detail-value">{{ codice_fiscale_shop }}</span>
+        </div>
+        {% endif %}
+
+        {% if rea_shop %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">REA:</span>
+          <span class="company-detail-value">{{ rea_shop }}</span>
+        </div>
+        {% endif %}
+
+        {% if capitale_sociale %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Capitale Sociale:</span>
+          <span class="company-detail-value">€ {{ capitale_sociale }}</span>
+        </div>
+        {% endif %}
+
+        {% if shop.phone %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Telefono:</span>
+          <span class="company-detail-value">{{ shop.phone }}</span>
+        </div>
+        {% endif %}
+
+        {% if shop.email %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Email:</span>
+          <span class="company-detail-value">{{ shop.email }}</span>
+        </div>
+        {% endif %}
+
+        {% if pec_shop %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">PEC:</span>
+          <span class="company-detail-value">{{ pec_shop }}</span>
+        </div>
+        {% endif %}
+
+        {% if sdi_shop %}
+        <div class="company-detail-item">
+          <span class="company-detail-label">Codice SDI:</span>
+          <span class="company-detail-value">{{ sdi_shop }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- DATI CLIENTE -->
+    <div class="info-row">
+      <div class="info-box">
+        <h3>Dati Cliente</h3>
+        {% if order.customer %}
+          {% assign customer_id = order.customer.id %}
+          {% assign customer_type = order.customer.metafields.invoice.customer_type %}
+          {% assign ragione_sociale = order.customer.metafields.invoice.ragione_sociale %}
+          {% assign partita_iva = order.customer.metafields.invoice.partita_iva %}
+          {% assign codice_fiscale = order.customer.metafields.invoice.codice_fiscale %}
+          {% assign pec = order.customer.metafields.invoice.pec %}
+          {% assign sdi = order.customer.metafields.invoice.codice_destinatario %}
+          {% assign sede_legale = order.customer.metafields.invoice.sede_legale %}
+
+          {% if ragione_sociale %}
+          <p><strong>{{ ragione_sociale }}</strong></p>
+          {% else %}
+          <p><strong>{{ order.customer.name }}</strong></p>
+          {% endif %}
+
+          {% if partita_iva %}
+          <p><span class="info-label">Partita IVA:</span> {{ partita_iva }}</p>
+          {% endif %}
+
+          {% if codice_fiscale %}
+          <p><span class="info-label">Codice Fiscale:</span> {{ codice_fiscale }}</p>
+          {% endif %}
+
+          {% comment %} Sede Legale - solo per società {% endcomment %}
+          {% if customer_type == 'company' and sede_legale %}
+            {% if sede_legale.via or sede_legale.cap or sede_legale.citta or sede_legale.provincia %}
+          <p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e0e0e0;">
+            <span class="info-label">Sede Legale:</span><br/>
+            {% if sede_legale.via %}{{ sede_legale.via }}<br/>{% endif %}
+            {% if sede_legale.cap or sede_legale.citta %}
+            {{ sede_legale.cap }} {{ sede_legale.citta }}{% if sede_legale.provincia %} ({{ sede_legale.provincia }}){% endif %}
+            {% endif %}
+          </p>
+            {% endif %}
+          {% endif %}
+
+          {% if pec %}
+          <p><span class="info-label">PEC:</span> {{ pec }}</p>
+          {% endif %}
+
+          {% if sdi %}
+          <p><span class="info-label">Codice SDI:</span> {{ sdi }}</p>
+          {% endif %}
+
+          {% if order.customer.email %}
+          <p><span class="info-label">Email:</span> {{ order.customer.email }}</p>
+          {% endif %}
+
+          {% if order.customer.phone %}
+          <p><span class="info-label">Telefono:</span> {{ order.customer.phone }}</p>
+          {% endif %}
+        {% else %}
+          <p><em>Cliente non specificato</em></p>
+        {% endif %}
+      </div>
+
+      <div class="info-box">
+        <h3>Indirizzo di Fatturazione</h3>
+        {% if order.billing_address %}
+          <p>{{ order.billing_address | format_address }}</p>
+          {% if order.billing_address.phone %}
+          <p><span class="info-label">Tel:</span> {{ order.billing_address.phone }}</p>
+          {% endif %}
+        {% else %}
+          <p><em>Non specificato</em></p>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if order.shipping_address %}
+    <div class="info-row">
+      <div class="info-box" style="flex: none; width: 100%;">
+        <h3>Indirizzo di Spedizione</h3>
+        <p>{{ order.shipping_address | format_address }}</p>
+        {% if order.shipping_address.phone %}
+        <p><span class="info-label">Tel:</span> {{ order.shipping_address.phone }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- DETTAGLI ARTICOLI -->
+    <h2 style="margin-top: 30px; font-size: 12pt; border-bottom: 1px solid #ccc; padding-bottom: 5px;">Dettaglio Articoli</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 10%;" class="text-center">Q.tà</th>
+          <th style="width: 50%;">Descrizione</th>
+          <th style="width: 15%;" class="text-right">Prezzo Unit.</th>
+          <th style="width: 10%;" class="text-center">IVA %</th>
+          <th style="width: 15%;" class="text-right">Totale</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for line_item in order.line_items %}
+        <tr>
+          <td class="text-center">{{ line_item.quantity }}</td>
+          <td>
+            <strong>{{ line_item.title }}</strong>
+            {% if line_item.variant_title and line_item.variant_title != 'Default Title' %}
+            <div class="item-description">Variante: {{ line_item.variant_title }}</div>
+            {% endif %}
+            {% if line_item.sku %}
+            <div class="item-description">SKU: {{ line_item.sku }}</div>
+            {% endif %}
+            {% if line_item.line_level_discount_allocations.size > 0 %}
+              {% for discount_allocation in line_item.line_level_discount_allocations %}
+              <div class="discount-info">
+                Sconto: {{ discount_allocation.discount_application.title }} (-{{ discount_allocation.amount | money }})
+              </div>
+              {% endfor %}
+            {% endif %}
+          </td>
+          <td class="text-right">
+            {% if line_item.original_price != line_item.final_price %}
+            <s style="color: #999;">{{ line_item.original_price | money }}</s><br/>
+            {% endif %}
+            {{ line_item.final_price | money }}
+          </td>
+          <td class="text-center">
+            {% assign tax_rate = line_item.tax_lines | first %}
+            {% if tax_rate %}
+              {{ tax_rate.rate | times: 100 | round: 0 }}%
+            {% else %}
+              0%
+            {% endif %}
+          </td>
+          <td class="text-right">
+            <strong>{{ line_item.final_line_price | money }}</strong>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- TOTALI -->
+    <table class="totals-table">
+      <tbody>
+        <tr class="subtotal">
+          <td>Imponibile:</td>
+          <td class="text-right">{{ order.line_items_subtotal_price | money }}</td>
+        </tr>
+
+        {% for discount_application in order.discount_applications %}
+          {% if discount_application.target_selection == 'all' and discount_application.target_type != 'shipping_line' %}
+        <tr>
+          <td>
+            {% if discount_application.title %}
+            Sconto ({{ discount_application.title }}):
+            {% else %}
+            Sconto:
+            {% endif %}
+          </td>
+          <td class="text-right" style="color: #d9534f;">-{{ discount_application.total_allocated_amount | money }}</td>
+        </tr>
+          {% endif %}
+        {% endfor %}
+
+        <tr>
+          <td>IVA:</td>
+          <td class="text-right">{{ order.tax_price | money }}</td>
+        </tr>
+
+        {% if order.shipping_address %}
+        <tr>
+          <td>Spese di spedizione:</td>
+          <td class="text-right">
+            {% assign has_shipping_discount = false %}
+            {% for discount_application in order.discount_applications %}
+              {% if discount_application.target_type == 'shipping_line' %}
+                {% assign has_shipping_discount = true %}
+              {% endif %}
+            {% endfor %}
+            {% if has_shipping_discount %}
+              <span style="color: #28a745;">GRATUITA</span>
+            {% else %}
+              {{ order.shipping_price | money }}
+            {% endif %}
+          </td>
+        </tr>
+        {% endif %}
+
+        <tr class="total">
+          <td>TOTALE DOCUMENTO:</td>
+          <td class="text-right">{{ order.total_price | money }}</td>
+        </tr>
+
+        {% if order.net_payment != order.total_net_amount %}
+        <tr>
+          <td>Importo Pagato:</td>
+          <td class="text-right" style="color: #28a745;">{{ order.net_payment | money }}</td>
+        </tr>
+        {% endif %}
+
+        {% if order.total_refunded_amount > 0 %}
+        <tr>
+          <td>Importo Rimborsato:</td>
+          <td class="text-right" style="color: #d9534f;">-{{ order.total_refunded_amount | money }}</td>
+        </tr>
+        {% endif %}
+
+        {% if order.net_payment != order.total_net_amount %}
+        <tr style="border-top: 2px solid #d9534f;">
+          <td><strong>DA SALDARE:</strong></td>
+          <td class="text-right" style="color: #d9534f;"><strong>{{ order.total_price | minus: order.net_payment | money }}</strong></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+
+    <!-- AVVISO FATTURA PROFORMA -->
+    <div class="warning-box">
+      <p><strong>⚠️ ATTENZIONE:</strong> Questo documento costituisce una <strong>FATTURA PROFORMA</strong> e <strong>NON HA VALORE FISCALE</strong>.</p>
+      <p>Ai sensi dell'art. 21 del D.P.R. 633/72, la fattura fiscale definitiva verrà emessa successivamente al pagamento e/o alla conferma dell'ordine.</p>
+    </div>
+
+    <!-- NOTE -->
+    {% if order.note %}
+    <div class="notes">
+      <h3>Note Ordine</h3>
+      <p>{{ order.note }}</p>
+    </div>
+    {% endif %}
+
+    <!-- CONDIZIONI DI PAGAMENTO -->
+    <div class="notes payment-info">
+      <h3>Modalità di Pagamento</h3>
+      {% if order.gateway %}
+      <table class="table-tabular" style="margin: 0 0 1.5em 0;">
+         <thead>
+            <tr>
+               <th>Metodo</th>
+               <th>Importo</th>
+            </tr>
+         </thead>
+         <tbody>
+        {% for transaction in order.gateway %}
+          <tr>
+           <td>{{ transaction.formattedGateway | payment_method }}</td>
+           <td>{{ transaction.amount | money }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+      {% if order.payment_terms %}
+      <p>{{ order.payment_terms }}</p>
+      {% else %}
+      <p>Pagamento come da accordi commerciali.</p>
+      {% endif %}
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>{{ shop.name }} - {{ shop.email }}</p>
+      <p style="margin-top: 10px; font-size: 8pt; color: #999;">
+        Documento generato automaticamente il {{ "now" | date: "%d/%m/%Y alle %H:%M" }}
+      </p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+
+api_version = "2025-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "invoice-tail"
+uid = "929fb2d7-34d0-00cf-a6de-00f256a93dee340a583d"
+handle = "invoice-tail"
+description = "A typescript-react POS UI extension"
+
+
+# module: file that contains your extension’s source code
+# target: location where your extension appears in POS
+[[extensions.targeting]]
+module = "./src/Tile.tsx"
+target = "pos.home.tile.render"
+
+[[extensions.targeting]]
+module = "./src/Modal.tsx"
+target = "pos.home.modal.render"
