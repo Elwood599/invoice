@@ -27,8 +27,6 @@ export const IndividualForm = ({
 				value={values.codice_fiscale || ''}
 				error={errors.codice_fiscale}
 				onInput={(val) => onFieldChange('codice_fiscale', val.toUpperCase())}
-				onBlur={() => onFieldBlur('codice_fiscale', values.codice_fiscale || '')}
-				placeholder="RSSMRA80A01H501U"
 			/>
 
 			<TextField
@@ -36,8 +34,6 @@ export const IndividualForm = ({
 				value={values.pec || ''}
 				error={errors.pec}
 				onInput={(val) => onFieldChange('pec', val)}
-				onBlur={() => onFieldBlur('pec', values.pec || '')}
-				placeholder="mario.rossi@pec.it"
 			/>
 
 			<TextField
@@ -45,8 +41,6 @@ export const IndividualForm = ({
 				value={values.codice_sdi || ''}
 				error={errors.codice_sdi}
 				onInput={(val) => onFieldChange('codice_sdi', val.toUpperCase())}
-				onBlur={() => onFieldBlur('codice_sdi', values.codice_sdi || '')}
-				placeholder="ABCDEFG"
 			/>
 		</>
 	);
