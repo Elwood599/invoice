@@ -47,7 +47,7 @@ export const CompanyForm = ({
 				required
 				value={values.codice_fiscale || ''}
 				error={errors.codice_fiscale}
-				onInput={(val) => onFieldChange('codice_fiscale', val.toUpperCase())}
+				onInput={(val) => onFieldChange('codice_fiscale', val)}
 				onBlur={() => onFieldBlur('codice_fiscale', values.codice_fiscale || '')}
 				placeholder="RSSMRA80A01H501U o 12345678901"
 			/>
@@ -65,7 +65,7 @@ export const CompanyForm = ({
 				label="Codice SDI (opzionale)"
 				value={values.codice_sdi || ''}
 				error={errors.codice_sdi}
-				onInput={(val) => onFieldChange('codice_sdi', val.toUpperCase())}
+				onInput={(val) => onFieldChange('codice_sdi', val)}
 				onBlur={() => onFieldBlur('codice_sdi', values.codice_sdi || '')}
 				placeholder="ABCDEFG"
 			/>
@@ -98,7 +98,7 @@ export const CompanyForm = ({
 				required
 				value={values.sede_legale_provincia || ''}
 				error={errors.sede_legale_provincia}
-				onInput={(val) => onFieldChange('sede_legale_provincia', val.toUpperCase())}
+				onInput={(val) => onFieldChange('sede_legale_provincia', val)}
 				onBlur={() => onFieldBlur('sede_legale_provincia', values.sede_legale_provincia || '')}
 				placeholder="MI"
 			/>

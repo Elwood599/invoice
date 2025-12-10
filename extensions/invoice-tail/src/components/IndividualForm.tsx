@@ -26,7 +26,7 @@ export const IndividualForm = ({
 				required
 				value={values.codice_fiscale || ''}
 				error={errors.codice_fiscale}
-				onInput={(val) => onFieldChange('codice_fiscale', val.toUpperCase())}
+				onInput={(val) => onFieldChange('codice_fiscale', val)}
 			/>
 
 			<TextField
@@ -40,7 +40,7 @@ export const IndividualForm = ({
 				label="Codice SDI (opzionale)"
 				value={values.codice_sdi || ''}
 				error={errors.codice_sdi}
-				onInput={(val) => onFieldChange('codice_sdi', val.toUpperCase())}
+				onInput={(val) => onFieldChange('codice_sdi', val)}
 			/>
 		</>
 	);
